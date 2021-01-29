@@ -5,6 +5,12 @@
 `yarn start or npm run start`<br />
 サーバ側も立ち上げてください！<br />
 
+## コードの見方
+急ぎ作ったので汚いです（土下座）<br />
+`SimpleSocketPage`を見ていただけると大体ここに詰まってます<br />
+（チャット形式も作ろうと思ったんですが時間がなく）<br />
+`hooks.ts`にWebSocketの処理を入れているのでこちらを見ていただければ大丈夫かと思います！<br />
+
 ## socket.io使い方
 ライブラリ：socket.io-client<br />
 ```
