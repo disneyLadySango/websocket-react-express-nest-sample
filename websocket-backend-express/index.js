@@ -11,11 +11,13 @@ const io = require("socket.io")(http, {
   }
 });
 
-const port = 9000
+const PORT = 9000
 
+// SimpleSocket
+const simpleIo = io.of('/simple')
 const messageEmit = (msg, sec) => {
   setTimeout(() => {
-    io.emit('message', `WebSocketからの通知をもらいました。${msg}`)
+    simpleIo.emit('message', `WebSocketからの通知をもらいました。${msg}`)
   }, sec)
 }
 // API
@@ -30,15 +32,24 @@ app.get('/', (req, res) => {
 })
 
 // WebSokcetコネクションイベント
-io.on('connection', (socket) => {
-  console.log('connected');
+simpleIo.on('connection', (socket) => {
+  console.log('simple________connected');
   // 通信イベント　sendを登録
   socket.on('send', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('send', `WebSocket SEND_____ ${msg}`)
+    console.log('simple________message: ' + msg);
+    simpleIo.emit('send', `WebSocket SEND_____ ${msg}`)
   });
 });
 
-http.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+// /chat
+const membarToken = []
+// { sessionToken: string, name: string }
+const chatSocket = io.of('/chat')
+
+chatSocket.on('connection', (socket) => {
+  console.log()
+})
+
+http.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`)
 })
