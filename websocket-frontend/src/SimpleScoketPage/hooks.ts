@@ -45,7 +45,6 @@ export const useFetchAndWebScoket = () => {
   // コールバック登録
   useEffect(() => {
     console.log('Connectinng..');
-
     socket.current = io('ws://localhost:9000/simple');
     socket.current.on('connect', (payload: any) => {
       console.log('WEBSOCKET_______CONNECT', payload);

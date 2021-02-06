@@ -9,8 +9,8 @@ import {
 import { Socket, Server } from 'socket.io';
 
 import Logger from 'src/utils/logger';
-import { RoomSerivce } from 'src/domain/service/room.service';
-import * as Dto from 'src/dto/room.dto';
+import { RoomSerivce } from 'src/room/room.service';
+import * as Dto from 'src/room/room.dto';
 
 @WebSocketGateway({ namespace: 'room', origins: '*:*' })
 export class RoomGateway

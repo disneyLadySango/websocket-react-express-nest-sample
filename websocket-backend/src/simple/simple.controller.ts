@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import Logger from 'src/utils/logger';
-import { SimpleGateway } from 'src/gateways/simple.gateway';
+import { SimpleGateway } from 'src/simple/simple.gateway';
 
 @Controller('/simple')
 export class SimpleController {

@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { SocketIoAdapter } from './adpters/app.adapters';
-import { AppModule } from './modules/app.module';
+import { SocketIoAdapter } from './app/app.adapters';
+import { AppModule } from './app/app.module';
 import * as cors from 'cors';
 
 async function bootstrap() {

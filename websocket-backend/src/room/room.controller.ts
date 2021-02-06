@@ -1,9 +1,8 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 
 import Logger from 'src/utils/logger';
-import * as Dto from 'src/dto/room.dto';
-import { RoomSerivce } from 'src/domain/service/room.service';
-import { response } from 'express';
+import * as Dto from 'src/room/room.dto';
+import { RoomSerivce } from 'src/room/room.service';
 
 @Controller('/room')
 export class RoomController {

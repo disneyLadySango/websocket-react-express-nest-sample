@@ -4,7 +4,7 @@ import Logger from 'src/utils/logger';
 import { Chat } from 'src/domain/model/chat.model';
 import { Room } from 'src/domain/model/room.model';
 import { User } from 'src/domain/model/user.model';
-import { RoomRepository } from 'src/domain/repository/room.repository';
+import { RoomRepository } from 'src/room/room.repository';
 
 @Injectable()
 export class RoomSerivce {
