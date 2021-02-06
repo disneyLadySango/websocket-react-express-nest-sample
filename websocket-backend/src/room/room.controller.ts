@@ -25,11 +25,10 @@ export class RoomController {
   @Post()
   async create(@Body() body: Dto.RequestCreate): Promise<Dto.ResponseCreate> {
     this.logger.start('create', body);
-
     const { name, description } = body;
-    const room = this.roomService.create(name, description);
+    const rooms = this.roomService.create(name, description);
     const response = {
-      room,
+      rooms,
     };
 
     this.logger.end('create', response);

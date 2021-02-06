@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-import Logger from '../utils/logger';
+import Logger from 'src/utils/logger';
+
+import * as Types from './types';
 
 const SOCKET_STATUS = {
   noConnect: 'no_connect',
@@ -11,18 +13,12 @@ const SOCKET_STATUS = {
 } as const;
 type SocketStatus = typeof SOCKET_STATUS[keyof typeof SOCKET_STATUS];
 
-export type WebSocketEvent = {
-  onConnect?: (payload?: any) => void;
-  onConnectError?: (error?: Error) => void;
-  onDisconnect?: (reason?: any) => void;
-};
-
 const DEFAULT_RECONNECT_COUNT = 3;
 const DEFAULT_RECONNECT_INTERVAL = 3000;
 
 const useWebSocket = (
   connectUrl: string,
-  socketEvent?: WebSocketEvent,
+  socketEvent?: Types.WebSocketEvent,
   reConnectCount: number = DEFAULT_RECONNECT_COUNT,
   reConnectInterval: number = DEFAULT_RECONNECT_INTERVAL
 ) => {

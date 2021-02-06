@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useSimpleFetchAndWebScoket } from './hooks';
-import * as Presenter from './Presenter';
+import * as Presenter from './SimpleSocketPagePresenter';
 
 const SimpleSocketPage = () => {
   const [states, actions] = useSimpleFetchAndWebScoket();

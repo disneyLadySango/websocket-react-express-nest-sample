@@ -30,14 +30,14 @@ export class RoomSerivce {
     return rooms;
   }
 
-  create(name: string, description: string): Room {
+  create(name: string, description: string): Room[] {
     this.logger.start('create', name, description);
 
-    const room = this.roomRepostiory.create(name, description);
+    const rooms = this.roomRepostiory.create(name, description);
 
-    this.logger.end('create', room);
+    this.logger.end('create', rooms);
 
-    return room;
+    return rooms;
   }
 
   join(uid: string, sessionId: string, name: string): Room {

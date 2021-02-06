@@ -1,10 +1,6 @@
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-import { 
-  AppBar,
-  Toolbar,
-  Typography,
-} from '@material-ui/core'
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 
 export const Header: React.FC = ({ children }) => (
   <header>
@@ -16,14 +12,12 @@ export const Header: React.FC = ({ children }) => (
       </Toolbar>
     </AppBar>
   </header>
-)
+);
 
 const StyledLink = styled(Link)`
-  color: #FFF;
+  color: #fff;
   text-decoration: none;
-`
+`;
 export const TypographyLink: React.FC = ({ children }) => (
-  <StyledLink to="/">
-    {children}
-  </StyledLink>
-)
+  <StyledLink to="/">{children}</StyledLink>
+);

@@ -12,7 +12,7 @@ export interface RequestCreate {
 }
 
 export interface ResponseCreate {
-  room: Room;
+  rooms: Room[];
 }
 
 export interface RequestJoin {

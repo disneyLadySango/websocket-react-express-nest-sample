@@ -1,6 +1,7 @@
 import { User } from './user.model';
 import { Chat } from './chat.model';
 import { getNextId } from 'src/utils/array';
+import { getNowDay } from 'src/utils/day';
 
 export class Room {
   id: number;
@@ -9,8 +10,8 @@ export class Room {
   description: string;
   members: User[];
   chats: Chat[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 
   constructor(id: number, name: string, description: string) {
     this.id = id;
@@ -19,8 +20,9 @@ export class Room {
     this.description = description;
     this.members = new Array<User>();
     this.chats = new Array<Chat>();
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    const now = getNowDay();
+    this.createdAt = now;
+    this.updatedAt = now;
   }
 
   join(user: User) {
@@ -49,6 +51,6 @@ export class Room {
   }
 
   private _updateDate() {
-    this.updatedAt = new Date();
+    this.updatedAt = getNowDay();
   }
 }

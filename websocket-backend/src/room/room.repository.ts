@@ -24,18 +24,16 @@ export class RoomRepository {
     return this.rooms;
   }
 
-  create(name: string, description: string): Room {
+  create(name: string, description: string): Room[] {
     this.logger.start('create', name, description);
 
     const nextId = getNextId(this.rooms);
     const room = new Room(nextId, name, description);
     this.rooms.push(room);
 
-    const newRoom = getLastData(this.rooms);
+    this.logger.end('create', this.rooms);
 
-    this.logger.end('create', newRoom);
-
-    return newRoom;
+    return this.rooms;
   }
 
   delete(uid: string): void {

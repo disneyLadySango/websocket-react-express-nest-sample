@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 
-import useWebSocket from '../hooks/useWebSocket';
-import Logger from '../utils/logger';
+import useWebSocket from 'src/hooks/useWebSocket';
+import Logger from 'src/utils/logger';
 
 type ApiResponse = {
   message: string;
