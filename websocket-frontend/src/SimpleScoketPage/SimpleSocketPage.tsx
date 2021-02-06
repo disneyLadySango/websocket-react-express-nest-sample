@@ -1,30 +1,30 @@
-import React from 'react'
+import React from 'react';
 
-import { useFetchAndWebScoket } from './hooks'
-import * as Presenter from './Presenter'
+import { useSimpleFetchAndWebScoket } from './hooks';
+import * as Presenter from './Presenter';
 
 const SimpleSocketPage = () => {
-  const [states, actions] = useFetchAndWebScoket()
+  const [states, actions] = useSimpleFetchAndWebScoket();
   const fetchProps = {
     value: states.inputValue,
     message: states.apiMessage,
     onChange: actions.onChange,
     onClick: actions.onClickFetch,
-  }
+  };
   const webscoketProps = {
     message: states.scoketMessage,
-    status: states.socketStatus as string,
+    status: states.status as string,
     count: states.socketCount,
     id: states.connectionId,
-    failCount: states.failConnectCount,
+    failCount: states.errorCount,
     onClick: actions.onClickConnection,
-    onClickSender: actions.onClickSender
-  }
+    onClickSender: actions.onClickSender,
+  };
   return (
-    <Presenter.SimpleSocketPage 
+    <Presenter.SimpleSocketPage
       fetchData={fetchProps}
       websocketData={webscoketProps}
     />
-  )
-}
-export default SimpleSocketPage
+  );
+};
+export default SimpleSocketPage;
