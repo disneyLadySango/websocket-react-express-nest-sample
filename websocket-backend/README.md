@@ -1,4 +1,5 @@
 # 環境設定
+
 ```
   yarn
   or
@@ -6,6 +7,7 @@
 ```
 
 # サーバサイド実行方法
+
 ```
   yarn start:dev
   or
@@ -13,7 +15,13 @@
 ```
 
 # サーバサイドポート番号
+
 9000
+
+# WebSocket 接続先
+
+- /simple
+- /room
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
