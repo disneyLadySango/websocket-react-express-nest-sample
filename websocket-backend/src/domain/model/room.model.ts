@@ -1,7 +1,8 @@
 import { User } from './user.model';
 import { Chat } from './chat.model';
 import { getNextId } from 'src/utils/array';
-import { getNowDay } from 'src/utils/day';
+import { createUid, getNowDay } from 'src/utils/model';
+import { ValidationException } from 'src/exception/validate.exception';
 
 export class Room {
   id: number;
@@ -14,8 +15,13 @@ export class Room {
   updatedAt: string;
 
   constructor(id: number, name: string, description: string) {
+    if (!name) {
+      throw new ValidationException('名前が入力されていません', [
+        { field: 'name', message: '必須項目です' },
+      ]);
+    }
     this.id = id;
-    this.uid = Math.random().toString(32).substring(2);
+    this.uid = createUid();
     this.name = name;
     this.description = description;
     this.members = new Array<User>();
@@ -35,7 +41,7 @@ export class Room {
 
   leave(user: User): void {
     const newMembers = this.members.filter(
-      (member) => member.sessionId !== user.sessionId,
+      (member) => member.name !== user.name,
     );
     this.members = newMembers;
     const id = getNextId(this.chats);

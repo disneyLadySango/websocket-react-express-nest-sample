@@ -37,3 +37,8 @@ export interface RequestSend {
 export interface ResponseSend {
   chats: Chat[];
 }
+
+export interface RequestLeave {
+  uid: string;
+  user: User;
+}

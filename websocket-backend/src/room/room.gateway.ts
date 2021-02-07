@@ -11,6 +11,7 @@ import { Socket, Server } from 'socket.io';
 import Logger from 'src/utils/logger';
 import { RoomSerivce } from 'src/room/room.service';
 import * as Dto from 'src/room/room.dto';
+import { Room } from 'src/domain/model/room.model';
 
 @WebSocketGateway({ namespace: 'room', origins: '*:*' })
 export class RoomGateway
@@ -20,10 +21,10 @@ export class RoomGateway
 
   private logger: Logger = new Logger('RoomGateway');
 
-  constructor(private roomService: RoomSerivce) {}
+  constructor(private service: RoomSerivce) {}
 
-  leave(message: string, delayTime: number = 3000): void {
-    // 未実装
+  async leave(room: Room): Promise<void> {
+    this.server.to(room.uid).emit('leave', room);
   }
 
   @SubscribeMessage('join')
@@ -34,7 +35,7 @@ export class RoomGateway
 
     // ルームへのjoin処理
     const sessionId = client.id;
-    const room = this.roomService.join(uid, sessionId, name);
+    const room = this.service.join(uid, sessionId, name);
     // 他のルームメンバーへ通知
     const otherJoinEmit: Dto.ResponseOtherJoin = {
       room,
@@ -56,7 +57,7 @@ export class RoomGateway
     this.logger.start('handleLeave', payload);
 
     const { uid, user, message } = payload;
-    const chats = this.roomService.send(uid, user, message);
+    const chats = this.service.send(uid, user, message);
     const emitData: Dto.ResponseSend = {
       chats,
     };

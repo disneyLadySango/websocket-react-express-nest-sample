@@ -1,5 +1,6 @@
 import { User } from './user.model';
-import { getNowDay } from 'src/utils/day';
+import { getNowDay } from 'src/utils/model';
+import { ValidationException } from 'src/exception/validate.exception';
 
 export class Chat {
   id: string;
@@ -9,6 +10,11 @@ export class Chat {
   updatedTime: string;
 
   constructor(id: string, user: User, message: string) {
+    if (!message) {
+      throw new ValidationException('メッセージを入力してください', [
+        { field: 'message', message: '必須項目です' },
+      ]);
+    }
     this.id = id;
     this.user = user;
     this.message = message;

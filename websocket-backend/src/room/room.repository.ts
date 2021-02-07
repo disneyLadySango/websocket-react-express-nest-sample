@@ -2,7 +2,8 @@ import Logger from 'src/utils/logger';
 import { User } from 'src/domain/model/user.model';
 import { Room } from 'src/domain/model/room.model';
 import { Chat } from 'src/domain/model/chat.model';
-import { getLastData, getNextId } from 'src/utils/array';
+import { getNextId } from 'src/utils/array';
+import { ValidationException } from 'src/exception/validate.exception';
 
 export class RoomRepository {
   private logger: Logger = new Logger('RoomRepository');
@@ -29,10 +30,13 @@ export class RoomRepository {
 
     const nextId = getNextId(this.rooms);
     const room = new Room(nextId, name, description);
-    this.rooms.push(room);
-
+    if (this.rooms.some((r) => r.uid === room.uid)) {
+      // UIDがかぶったら再度実行
+      return this.create(name, description);
+    } else {
+      this.rooms.push(room);
+    }
     this.logger.end('create', this.rooms);
-
     return this.rooms;
   }
 
@@ -48,9 +52,19 @@ export class RoomRepository {
   join(uid: string, user: User): Room {
     this.logger.start('join', uid, user);
 
+    // ルームの探索
     const index = this.rooms.findIndex((room) => room.uid === uid);
-    this.rooms[index].join(user);
+
+    // ユーザの名称確認（ユーザ名は一意）
     const room = this.rooms[index];
+    if (room.members.every((member) => member.name !== user.name)) {
+      // 一意ではない場合エラー
+      throw new ValidationException(
+        'ユーザー名が同じ人がいます、別のユーザー名を指定してください。',
+        [],
+      );
+    }
+    this.rooms[index].join(user);
 
     this.logger.end('join', room);
 
