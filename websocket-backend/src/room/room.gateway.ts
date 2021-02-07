@@ -29,8 +29,6 @@ export class RoomGateway
 
   @SubscribeMessage('leave')
   async handleLeave(client: Socket, payload: Dto.RequestJoin): Promise<void> {
-    console.log('LEVE');
-    console.log(payload);
     const { uid, name } = payload;
     const room = this.service.leave(uid, client.id, name);
     this.server.to(room.uid).emit('leave', { room: room });
@@ -67,7 +65,6 @@ export class RoomGateway
   @SubscribeMessage('send')
   async handleSend(client: Socket, payload: Dto.RequestSend) {
     this.logger.start('handleSend', payload);
-    console.log(client.rooms);
 
     const { uid, user, message } = payload;
     const chats = this.service.send(uid, user, message);
