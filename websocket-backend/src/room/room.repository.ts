@@ -57,7 +57,7 @@ export class RoomRepository {
 
     // ユーザの名称確認（ユーザ名は一意）
     const room = this.rooms[index];
-    if (room.members.every((member) => member.name !== user.name)) {
+    if (!room.members.every((member) => member.name !== user.name)) {
       // 一意ではない場合エラー
       throw new ValidationException(
         'ユーザー名が同じ人がいます、別のユーザー名を指定してください。',

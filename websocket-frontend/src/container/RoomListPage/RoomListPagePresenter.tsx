@@ -7,6 +7,7 @@ import {
   CardContent,
   Typography,
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 import Header from 'src/compontns/Header';
 import CreateModal from 'src/compontns/CreateModal';
@@ -83,7 +84,9 @@ export const RoomCard: React.FC<ModelTypes.Room> = (props) => (
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">チャットに参加する</Button>
+        <Link to={`/room/${props.uid}`}>
+          <Button size="small">チャットに参加する</Button>
+        </Link>
       </CardActions>
     </Card>
   </StyledCardWrapper>

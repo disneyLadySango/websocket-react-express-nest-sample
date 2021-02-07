@@ -19,6 +19,7 @@ const DEFAULT_RECONNECT_INTERVAL = 3000;
 const useWebSocket = (
   connectUrl: string,
   socketEvent?: Types.WebSocketEvent,
+  isUnmountDisconnect: boolean = true,
   reConnectCount: number = DEFAULT_RECONNECT_COUNT,
   reConnectInterval: number = DEFAULT_RECONNECT_INTERVAL
 ) => {
@@ -60,7 +61,7 @@ const useWebSocket = (
       socketEvent?.onDisconnect && socketEvent.onDisconnect(reason);
     });
     return () => {
-      socket.current?.disconnect();
+      isUnmountDisconnect && socket.current?.disconnect();
     };
   }, []);
 

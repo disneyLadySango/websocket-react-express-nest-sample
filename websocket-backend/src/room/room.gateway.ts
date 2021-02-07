@@ -27,34 +27,44 @@ export class RoomGateway
     this.server.to(room.uid).emit('leave', room);
   }
 
+  @SubscribeMessage('leave')
+  async handleLeave(client: Socket, payload: Dto.RequestJoin): Promise<void> {
+    const { uid, name } = payload;
+    const room = this.service.leave(uid, client.id, name);
+    this.server.to(room.uid).emit('leave', { room: room });
+  }
+
   @SubscribeMessage('join')
   async handelJoin(client: Socket, payload: Dto.RequestJoin): Promise<void> {
     this.logger.start('handelJoin', payload);
 
     const { uid, name } = payload;
+    try {
+      // ルームへのjoin処理
+      const sessionId = client.id;
+      const room = this.service.join(uid, sessionId, name);
+      // 他のルームメンバーへ通知
+      const otherJoinEmit: Dto.ResponseOtherJoin = {
+        room,
+      };
+      this.server.to(uid).emit('otherJoin', otherJoinEmit);
+      // 接続ユーザーへレスポンス
+      // 実際にルームに接続
+      await client.join(uid);
+      const joinEmit: Dto.ResponseJoin = {
+        room,
+      };
+      this.server.to(client.id).emit('join', joinEmit);
+    } catch (error) {
+      this.server.to(client.id).emit('joinError', error);
+    }
 
-    // ルームへのjoin処理
-    const sessionId = client.id;
-    const room = this.service.join(uid, sessionId, name);
-    // 他のルームメンバーへ通知
-    const otherJoinEmit: Dto.ResponseOtherJoin = {
-      room,
-    };
-    this.server.to(uid).emit('otherJoin', otherJoinEmit);
-    // 接続ユーザーへレスポンス
-    // 実際にルームに接続
-    await client.join(uid);
-    const joinEmit: Dto.ResponseJoin = {
-      room,
-    };
-    this.server.to(client.id).emit('join', joinEmit);
-
-    this.logger.end('handelJoin', joinEmit);
+    this.logger.end('handelJoin');
   }
 
   @SubscribeMessage('send')
-  async handleLeave(client: Socket, payload: Dto.RequestSend) {
-    this.logger.start('handleLeave', payload);
+  async handleSend(client: Socket, payload: Dto.RequestSend) {
+    this.logger.start('handleSend', payload);
 
     const { uid, user, message } = payload;
     const chats = this.service.send(uid, user, message);
@@ -63,7 +73,7 @@ export class RoomGateway
     };
     this.server.to(uid).emit('send', emitData);
 
-    this.logger.start('handleLeave', emitData);
+    this.logger.start('handleSend', emitData);
   }
 
   afterInit(server: Server) {
