@@ -34,7 +34,6 @@ const RoomListContent: React.FC<RoomListContentProps> = (props) => {
 };
 
 const RoomList: React.FC = (props) => {
-  console.log(props);
   const [states, actions] = useRoomList();
   const textFields = [
     { label: 'ルーム名', value: states.name, onChange: actions.onChangeName },

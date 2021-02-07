@@ -8,6 +8,8 @@ import * as ModelTypes from 'src/types/model';
 export const useRoomChat = (uid: string) => {
   const logger = useRef<Logger>(new Logger('useSimpleFetchAndWebScoket'));
 
+  const scrollRef = useRef<HTMLUListElement>(null);
+
   // 登録時のデータ
   const [name, setName] = useState<string>('');
 
@@ -57,10 +59,8 @@ export const useRoomChat = (uid: string) => {
       setChats(payload.chats);
     });
     return () => {
-      setName((prevName) => {
-        socket.current?.emit('leave', { uid: uid, name: prevName });
-        return '';
-      });
+      // ここの退出処理だけまだ動かせていない
+      socket.current?.emit('leave', { uid });
       socket.current?.disconnect();
     };
   }, []);
@@ -77,7 +77,6 @@ export const useRoomChat = (uid: string) => {
   const onJoin = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-      console.log(uid);
       // ルームへジョイン
       socket.current?.emit('join', { uid, name });
     },
@@ -96,7 +95,6 @@ export const useRoomChat = (uid: string) => {
   const onSendMessage = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-      console.log('TEST');
       socket.current?.emit('send', { uid, message, user: myUser });
       setMessage('');
     },
@@ -122,7 +120,7 @@ export const useRoomChat = (uid: string) => {
     []
   );
 
-  const states = { name, message, chats, members, myUser, room };
+  const states = { name, message, chats, members, myUser, room, scrollRef };
   const actions = {
     onChangeName,
     onJoin,

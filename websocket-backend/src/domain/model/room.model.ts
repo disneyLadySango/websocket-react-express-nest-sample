@@ -40,9 +40,13 @@ export class Room {
   }
 
   leave(user: User): void {
-    const newMembers = this.members.filter(
-      (member) => member.name !== user.name,
-    );
+    const newMembers = this.members.filter((member) => {
+      if (user.name) {
+        return member.name !== user.name;
+      } else {
+        return member.sessionId !== user.sessionId;
+      }
+    });
     this.members = newMembers;
     const id = getNextId(this.chats);
     const chat = new Chat(id, null, `${user.name}さんが退出しました。`);

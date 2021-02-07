@@ -1,12 +1,16 @@
+const CONFIG = 1;
+
 class Logger {
   constructor(private readonly context: string) {}
 
   debug = (message: string, ...optionalParams: any[]) => {
-    console.debug(`[${this.context}] ${message}:`, ...optionalParams);
+    0 >= CONFIG &&
+      console.debug(`[${this.context}] ${message}:`, ...optionalParams);
   };
 
   info = (message: string, ...optionalParams: any[]) => {
-    console.log(`[${this.context}] ${message}:`, ...optionalParams);
+    1 >= CONFIG &&
+      console.log(`[${this.context}] ${message}:`, ...optionalParams);
   };
 
   warn = (message: string, ...optionalParams: any[]) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import * as ModelTypes from 'src/types/model';
+import ChatList from 'src/compontns/ChatList';
 
 import { useRoomChat } from './hooks';
 import * as Presneter from './RoomPagePresenter';
@@ -28,69 +29,36 @@ const MemberChipList: React.FC<MemberChipListProps> = (props) => {
   );
 };
 
-type ChatProps = {
-  chat: ModelTypes.Chat;
-  myUser: ModelTypes.User;
-};
-const Chat: React.FC<ChatProps> = (props) => {
-  const date = props.chat.updatedTime.split(' ')[1];
-  if (!props.chat.user) {
-    return (
-      <Presneter.SystemMessage>{props.chat.message}</Presneter.SystemMessage>
-    );
-  }
-  if (props.myUser.name === props.chat.user.name) {
-    return (
-      <Presneter.MyMessage
-        name={props.chat.user.name}
-        message={props.chat.message}
-        date={date}
-      />
-    );
-  }
-  return (
-    <Presneter.OtherAuthorMessage
-      name={props.chat.user.name}
-      message={props.chat.message}
-      date={date}
-    />
-  );
-};
-type ChatListProps = {
+type UserChatPageProps = MemberChipListProps & {
   chats: ModelTypes.Chat[];
   myUser: ModelTypes.User;
+  scrollRef: React.RefObject<HTMLUListElement>;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onExit: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
-const ChatList: React.FC<ChatListProps> = (props) => {
-  return (
-    <>
-      {props.chats.map((chat) => (
-        <Chat key={chat.id} chat={chat} myUser={props.myUser} />
-      ))}
-    </>
-  );
-};
-
-type UserChatPageProps = MemberChipListProps &
-  ChatListProps & {
-    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    value: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  };
 const UserChatPage: React.FC<UserChatPageProps> = (props) => {
   return (
     <Presneter.UserChatPage
       memberChild={<MemberChipList members={props.members} />}
-      chatChild={<ChatList chats={props.chats} myUser={props.myUser} />}
+      chatChild={
+        <ChatList
+          chats={props.chats}
+          myUser={props.myUser}
+          scrollRef={props.scrollRef}
+        />
+      }
       value={props.value}
       onClick={props.onClick}
       onChange={props.onChange}
+      onExit={props.onExit}
     />
   );
 };
 
 const RoomPage = () => {
   const params = useParams<{ uid: string }>();
-  console.log(params);
   const [states, actions] = useRoomChat(params.uid);
   const title = states.room?.name || 'ユーザー名設定';
 
@@ -100,8 +68,10 @@ const RoomPage = () => {
       chats={states.chats}
       myUser={states.myUser}
       value={states.message}
+      scrollRef={states.scrollRef}
       onChange={actions.onChangeMessage}
       onClick={actions.onSendMessage}
+      onExit={actions.onLeave}
     />
   ) : (
     <UserJoinPage
