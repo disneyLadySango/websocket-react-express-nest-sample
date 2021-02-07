@@ -29,38 +29,41 @@ export const useRoomChat = (uid: string) => {
   const { socket } = useWebSocket('ws://localhost:9000/room', undefined, false);
 
   useEffect(() => {
-    // イベントハンドラを登録
-    // ジョインエラー
-    socket.current?.on('joinError', (error: any) => {
-      // TODO:何かする（予定、エラーにする場合ってどうするんだ、レスポンス的なのでemitするのか）
-      logger.current.error('JOIN_ERROR');
-      logger.current.error(error);
-    });
-    // 自分がジョインした場合
-    socket.current?.on('join', (payload: { room: ModelTypes.Room }) => {
-      setRoom(payload.room);
-      setChats(payload.room.chats);
-      setMembers(payload.room.members);
-      setMyUser(payload.room.members[payload.room.members.length - 1]);
-      socket.current?.off('joinError');
-    });
-    // 他の人がジョインした場合のデータ受信
-    socket.current?.on('otherJoin', (payload: { room: ModelTypes.Room }) => {
-      setChats(payload.room.chats);
-      setMembers(payload.room.members);
-    });
-    // 他の人が退出した場合のデータ受信
-    socket.current?.on('leave', (payload: { room: ModelTypes.Room }) => {
-      setChats(payload.room.chats);
-      setMembers(payload.room.members);
-    });
-    // メッセージを受信
-    socket.current?.on('send', (payload: { chats: ModelTypes.Chat[] }) => {
-      setChats(payload.chats);
-    });
+    const addEventHadler = () => {
+      // イベントハンドラを登録
+      // ジョインエラー
+      socket.current?.on('joinError', (error: any) => {
+        // TODO:何かする（予定、エラーにする場合ってどうするんだ、レスポンス的なのでemitするのか）
+        logger.current.error('JOIN_ERROR');
+        logger.current.error(error);
+      });
+      // 自分がジョインした場合
+      socket.current?.on('join', (payload: { room: ModelTypes.Room }) => {
+        setRoom(payload.room);
+        setChats(payload.room.chats);
+        setMembers(payload.room.members);
+        setMyUser(payload.room.members[payload.room.members.length - 1]);
+        socket.current?.off('joinError');
+      });
+      // 他の人がジョインした場合のデータ受信
+      socket.current?.on('otherJoin', (payload: { room: ModelTypes.Room }) => {
+        setChats(payload.room.chats);
+        setMembers(payload.room.members);
+      });
+      // 他の人が退出した場合のデータ受信
+      socket.current?.on('leave', (payload: { room: ModelTypes.Room }) => {
+        setChats(payload.room.chats);
+        setMembers(payload.room.members);
+      });
+      // メッセージを受信
+      socket.current?.on('send', (payload: { chats: ModelTypes.Chat[] }) => {
+        setChats(payload.chats);
+      });
+    };
+    !myUser && addEventHadler();
     return () => {
       // ここの退出処理だけまだ動かせていない
-      socket.current?.emit('leave', { uid });
+      socket.current?.emit('leave', { uid, name: myUser?.name });
       socket.current?.disconnect();
     };
   }, []);
@@ -103,21 +106,17 @@ export const useRoomChat = (uid: string) => {
 
   // 退出
   const onLeave = useCallback(
-    async (event?: React.MouseEvent<HTMLButtonElement>) => {
-      const body = {
-        uid,
-        user: myUser,
-      };
-      await axios.put<boolean>('http://localhost:9000/room', {
-        ...body,
-      });
-      setName('');
-      setMessage('');
-      setChats([]);
-      setMembers([]);
-      setMyUser(null);
+    (event?: React.MouseEvent<HTMLButtonElement>) => {
+      socket.current?.emit('leave', { uid, name });
+      setTimeout(() => {
+        setName('');
+        setMessage('');
+        setChats([]);
+        setMembers([]);
+        setMyUser(null);
+      }, 500);
     },
-    []
+    [socket, name]
   );
 
   const states = { name, message, chats, members, myUser, room, scrollRef };

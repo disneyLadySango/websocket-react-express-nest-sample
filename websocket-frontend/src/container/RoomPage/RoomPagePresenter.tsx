@@ -59,12 +59,12 @@ type UserChatPageProps = {
 export const UserChatPage: React.FC<UserChatPageProps> = (props) => (
   <StyledUserChatPage>
     <StyledContentWrap>
-      <Link to={`/room/list`}>
+      <Link to={'/room/list'}>
         <Button
           variant="contained"
           color="primary"
           endIcon={<ExitAppIcon />}
-          onClick={props.onClick}
+          onClick={props.onExit}
         >
           退出（動かない）
         </Button>

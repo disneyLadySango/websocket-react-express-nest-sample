@@ -39,6 +39,7 @@ export class RoomController {
   @Put()
   async leave(@Body() body: Dto.RequestLeave): Promise<boolean> {
     this.logger.start('leave', body);
+    console.log('TEST?____LEACE');
     console.log(body);
     const { uid, user } = body;
     const room = this.service.leave(uid, user.sessionId, user.name);
