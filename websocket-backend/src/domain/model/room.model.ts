@@ -40,16 +40,20 @@ export class Room {
   }
 
   leave(user: User): void {
-    const newMembers = this.members.filter((member) => {
+    const index = this.members.findIndex((member) => {
       if (user.name) {
-        return member.name !== user.name;
+        return member.name === user.name;
       } else {
-        return member.sessionId !== user.sessionId;
+        return member.sessionId === user.sessionId;
       }
     });
+    const leaveUser = this.members[index];
+    const newMembers = this.members.filter(
+      (member) => member.name !== leaveUser.name,
+    );
     this.members = newMembers;
     const id = getNextId(this.chats);
-    const chat = new Chat(id, null, `${user.name}さんが退出しました。`);
+    const chat = new Chat(id, null, `${leaveUser.name}さんが退出しました。`);
     this.chats.push(chat);
     this._updateDate();
   }
@@ -58,6 +62,11 @@ export class Room {
     this.chats.push(chat);
     this._updateDate();
     return this.chats;
+  }
+
+  userUpdate(user: User): void {
+    const index = this.members.findIndex((member) => member.name === user.name);
+    this.members[index].sessionId = user.sessionId;
   }
 
   private _updateDate() {

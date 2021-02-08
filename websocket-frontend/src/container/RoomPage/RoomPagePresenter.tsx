@@ -66,7 +66,7 @@ export const UserChatPage: React.FC<UserChatPageProps> = (props) => (
           endIcon={<ExitAppIcon />}
           onClick={props.onExit}
         >
-          退出（動かない）
+          退出
         </Button>
       </Link>
       <StyledMemberList>{props.memberChild}</StyledMemberList>

@@ -62,8 +62,7 @@ export const useRoomChat = (uid: string) => {
     };
     !myUser && addEventHadler();
     return () => {
-      // ここの退出処理だけまだ動かせていない
-      socket.current?.emit('leave', { uid, name: myUser?.name });
+      socket.current?.emit('leave', { uid });
       socket.current?.disconnect();
     };
   }, []);

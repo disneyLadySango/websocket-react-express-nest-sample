@@ -95,4 +95,13 @@ export class RoomRepository {
 
     return chats;
   }
+
+  // Disconnectで実行できるようにSend時に実行させる
+  userUpdate(index: number, uid: string, user: User): void {
+    this.logger.start('userUpdate', uid, user);
+
+    this.rooms[index].userUpdate(user);
+
+    this.logger.end('userUpdate');
+  }
 }

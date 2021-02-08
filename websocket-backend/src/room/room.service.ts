@@ -54,7 +54,7 @@ export class RoomSerivce {
   leave(uid: string, sessionId: string, name: string): Room {
     this.logger.start('leave', uid, sessionId, name);
 
-    const user = new User(sessionId, name);
+    const user = new User(sessionId, name, true);
     const room = this.roomRepostiory.leave(uid, user);
 
     this.logger.end('leave', room);

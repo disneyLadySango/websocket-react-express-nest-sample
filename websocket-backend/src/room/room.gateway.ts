@@ -29,9 +29,22 @@ export class RoomGateway
 
   @SubscribeMessage('leave')
   async handleLeave(client: Socket, payload: Dto.RequestJoin): Promise<void> {
+    this.logger.start('handleLeave', payload);
+    this.logger.debug(
+      'handleLeave',
+      `Client info - ${client.id} - ${client.rooms.size}`,
+    );
+
     const { uid, name } = payload;
     const room = this.service.leave(uid, client.id, name);
     this.server.to(room.uid).emit('leave', { room: room });
+    client.leave(room.uid);
+
+    this.logger.debug(
+      'handleLeave',
+      `Client info - ${client.id} - ${client.rooms.size}`,
+    );
+    this.logger.end('handleLeave');
   }
 
   @SubscribeMessage('join')
@@ -67,6 +80,8 @@ export class RoomGateway
     this.logger.start('handleSend', payload);
 
     const { uid, user, message } = payload;
+    // IDを更新
+    user.sessionId = client.id;
     const chats = this.service.send(uid, user, message);
     const emitData: Dto.ResponseSend = {
       chats,
@@ -81,7 +96,13 @@ export class RoomGateway
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.debug('handleDisconnect', `Client disconnected: ${client.id}`);
+    this.logger.debug(
+      'handleDisconnect',
+      `Client disconnected: ${client.id} - ${client.rooms.size}`,
+    );
+    if (!client.rooms[0]) return;
+    const room = this.service.leave(client.rooms[1], client.id, null);
+    this.server.to(room.uid).emit('leave', { room: room });
   }
 
   handleConnection(client: Socket, ...args: any[]) {

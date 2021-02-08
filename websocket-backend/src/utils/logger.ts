@@ -7,7 +7,7 @@ const enum LoggerConfig {
   error,
 }
 
-const CONFIG = 0;
+const CONFIG = 1;
 
 class Logger {
   private readonly logger: NestLogger;
