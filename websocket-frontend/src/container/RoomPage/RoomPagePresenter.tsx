@@ -91,3 +91,14 @@ export const MemberChip: React.FC<MemberChipProps> = (props) => (
     <Chip icon={<FaceIcon />} label={props.name} />
   </StyledMemberChip>
 );
+
+export const MySelfChip: React.FC<MemberChipProps> = (props) => (
+  <StyledMemberChip>
+    <Chip
+      icon={<FaceIcon />}
+      color="primary"
+      label={props.name}
+      variant="outlined"
+    />
+  </StyledMemberChip>
+);

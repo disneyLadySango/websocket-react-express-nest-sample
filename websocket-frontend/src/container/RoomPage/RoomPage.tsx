@@ -18,13 +18,21 @@ const UserJoinPage: React.FC<UserJoinPageProps> = (props) => {
 
 type MemberChipListProps = {
   members: ModelTypes.User[];
+  myUser: ModelTypes.User;
 };
 const MemberChipList: React.FC<MemberChipListProps> = (props) => {
   return (
     <>
-      {props.members.map((member) => (
-        <Presneter.MemberChip key={member.sessionId} name={member.name} />
-      ))}
+      {props.members.map((member) => {
+        if (member.name === props.myUser.name) {
+          return (
+            <Presneter.MySelfChip key={member.sessionId} name={member.name} />
+          );
+        }
+        return (
+          <Presneter.MemberChip key={member.sessionId} name={member.name} />
+        );
+      })}
     </>
   );
 };
@@ -41,7 +49,9 @@ type UserChatPageProps = MemberChipListProps & {
 const UserChatPage: React.FC<UserChatPageProps> = (props) => {
   return (
     <Presneter.UserChatPage
-      memberChild={<MemberChipList members={props.members} />}
+      memberChild={
+        <MemberChipList myUser={props.myUser} members={props.members} />
+      }
       chatChild={
         <ChatList
           chats={props.chats}
